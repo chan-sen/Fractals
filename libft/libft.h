@@ -6,7 +6,7 @@
 /*   By: chansen <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 10:52:38 by chansen           #+#    #+#             */
-/*   Updated: 2017/02/28 10:55:24 by chansen          ###   ########.fr       */
+/*   Updated: 2017/03/04 15:54:22 by chansen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct		s_list
 
 int					ft_getnbr(char *str, int *i);
 int					countwords(char *str);
+int					err_msg(char *str);
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
 void				*ft_memcpy(void *dst, const void *src, size_t n);

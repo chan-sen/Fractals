@@ -6,7 +6,7 @@
 #    By: chansen <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/10/02 15:14:07 by chansen           #+#    #+#              #
-#    Updated: 2017/02/28 11:00:25 by chansen          ###   ########.fr        #
+#    Updated: 2017/03/04 15:53:59 by chansen          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ CFLAG = -c -Wall -Werror -Wextra
 
 SRC_NAME =	ft_getnbr.c \
 			countwords.c \
+			err_msg.c \
 			ft_atoi.c \
 			ft_bzero.c \
 			ft_isalnum.c \
