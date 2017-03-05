@@ -6,7 +6,7 @@
 #    By: chansen <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/03/03 18:41:46 by chansen           #+#    #+#              #
-#    Updated: 2017/03/03 18:41:47 by chansen          ###   ########.fr        #
+#    Updated: 2017/03/04 15:58:50 by chansen          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LFT = -I libft -L libft -lft
 
 MLX = -I minilibx -L minilibx -lmlx
 
-FRAME = -framework OpenGL -framework WorkLS
+FRAME = -framework OpenGL -framework Appkit
 
 RM = rm -rf
 
@@ -40,3 +40,7 @@ fclean:
 	make -C ./minilibx/ clean
 	make -C ./libft/ fclean
 	$(RM) $(NAME)
+
+re: 
+	make fclean
+	make all
