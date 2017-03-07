@@ -21,18 +21,24 @@
 # define  WIN_HGT 1000
 # define  WIN_WDT 1000
 
+typedef struct  s_branch
+{
+  float          x;
+  float          y;
+}               t_branch;
+
 typedef struct	s_tree
 {
-	int						branch;
-	int						size;
-	double				*arctans;
+	t_branch			**branch;
+  int           len;
+  int           brs;
 	int						max;
 }								t_tree;
 
-typedef struct	s_mandl
+typedef struct	s_mandel
 {
 
-}								t_mandl;
+}								t_mandel;
 
 typedef	struct	s_julia
 {
