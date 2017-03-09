@@ -6,7 +6,7 @@
 #    By: chansen <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/03/03 18:41:46 by chansen           #+#    #+#              #
-#    Updated: 2017/03/04 15:58:50 by chansen          ###   ########.fr        #
+#    Updated: 2017/03/07 22:31:37 by chansen          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = main.c \
+SRC = src/*.c \
 
 LFT = -I libft -L libft -lft
 
