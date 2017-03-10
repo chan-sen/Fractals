@@ -25,9 +25,10 @@ int     check(char **argv)
   return (0);
 }
 
-void make_tree(char **argv, t_env *env)
+t_tree *make_tree(char **argv)
 {
-  int   b;
+  t_tree   *tree;
+  int     b;
 
   b = 0;
   printf("ehllo\n\n");
@@ -35,35 +36,39 @@ void make_tree(char **argv, t_env *env)
   //   env->tree->brs = ft_atoi(argv[2]);
   // else
     // env->tree->brs = 2;
-  env->tree = (t_tree*)malloc(sizeof(t_tree));
-  printf("hello\n");
-  printf("hello%i\n\n", ft_atoi(argv[3]));
-  ft_atoi(argv[3]) ? (env->tree->brs = ft_atoi(argv[3])) : (env->tree->brs = 2);
-  printf("ehllo\n\n");
-  env->tree->branch = NULL;
-  env->tree->branch = (t_branch*)malloc(sizeof(t_branch) * env->tree->brs);
+  tree = (t_tree*)ft_memalloc(sizeof(t_tree));
+  if (argv[2] != NULL)
+    tree->brs = ft_atoi(argv[2]);
+  else
+    tree->brs = 2;
+  // argv[2] ? (tree->brs = ft_atoi(argv[2])) : (tree->brs = 2);
+  tree->branch = NULL;
+  tree->branch = (t_branch*)malloc(sizeof(t_branch) * tree->brs);
 
-  while (b < env->tree->brs)
+  while (b < tree->brs)
   {
-    env->tree->branch[b].d = 20;
-    env->tree->branch[b].rad = (180 / (env->tree->brs + 1)) * (b + 1);
+    tree->branch[b].d = 20;
+    tree->branch[b].rad = (180 / (tree->brs + 1)) * (b + 1);
     b++;
   }
+  printf("hello\n");
   // env->tree->branch[env->tree->brs] = NULL;
-  ft_atoi(argv[3]) ? (env->tree->len = ft_atoi(argv[3])) : (env->tree->len = 100);
-  env->tree->brs > 4 ?( env->tree->max = 4) : (env->tree->max = 6);
+  tree->len = 100;
+  tree->brs > 4 ? (tree->max = 4) : (tree->max = 6);
+  return (tree);
 }
 
-void make_env(char **argv, int fractal, t_env *env)
+t_env *make_env(char **argv, int fractal)
 {
-  env = (t_env *)malloc(sizeof(t_env));
+  t_env   *ret;
+  ret = (t_env *)malloc(sizeof(t_env));
   if (fractal == 1)
-    make_tree(argv, env);
-
+    ret->tree = make_tree(argv);
   // if (fractal == 2)
   //   make_julia(env);
   // if (fractal == 3)
   //   make_mandel(env);
+  return (ret);
 }
 
 int tree_mouse(int key, int x, int y, t_env *env)
@@ -114,7 +119,7 @@ t_point pointb(t_env *env, t_point a, int j, int br) // j for branch # (angle an
   float     x;
   float     y;
 
-  b.r = ((env->tree->branch[j].d) / env->tree->max) * br;
+  b.r = ((env->tree->branch[j].d) / env->tree->max) * br + 1;
   b.rad += a.rad + env->tree->branch[j].rad;
 
   x = (b.r * sin(b.rad)) * -1;
@@ -168,11 +173,15 @@ void draw_branch(t_env *env, t_line line)
 
 void branch(t_env *env, t_point a)
 {
-  int     br;
-  int     j;
+  int         br;
+  int         j;
 
   br = 0;
   j = 0;
+  printf("hello\n\n");
+
+  // VVVVV INFINITY LOOP
+
   while (br < env->tree->max)
   {
     while (j < env->tree->brs)
@@ -261,7 +270,7 @@ int     main(int argc, char **argv)
   fractal = check(argv);
   if (fractal == 0)
     return (err_msg("Usage : ./fractol <tree/julia/mandel>\n"));
-  make_env(argv, fractal, env);
+  env = make_env(argv, fractal);
   fractals(fractal, env);
   return (0);
 }
