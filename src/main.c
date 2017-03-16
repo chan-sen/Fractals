@@ -22,6 +22,8 @@ int     check(char **argv)
     return (2);
   if (ft_strcmp(argv[1], "mandel") == 0)
     return (3);
+  if (ft_strcmp(argv[1], "snowflake?") == 0)
+    return (4);
   return (0);
 }
 
@@ -71,6 +73,8 @@ t_env *make_env(char **argv, int fractal)
   //   make_julia(env);
   // if (fractal == 3)
   //   make_mandel(env);
+  if (fractal == 4)
+    ret->sf = make_snowflake_questionmark();
   return (ret);
 }
 
@@ -153,7 +157,6 @@ void draw_branch(t_env *env, t_line line)
   line.xi = line.x1 < line.x2 ? 1 : -1;
   line.yi = line.y1 < line.y2 ? 1 : -1;
   line.e = (line.dx > line.dy ? line.dx : -(line.dy)) / 2;
-  printf("drawbranch\n");
   while (!(line.x1 == line.x2 && line.y1 == line.y2))
   {
     put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
@@ -200,18 +203,7 @@ void branch(t_env *env, t_point a, int br)
   }
 }
 
-t_point  center_tree(t_env *env, int i)
-{
-  // initial branch point
-  t_point   origin;
 
-  origin.x = (WIN_WDT / 2);
-  origin.y = (WIN_HGT / 2) + 50;
-  origin.rad = env->tree->branch[i].rad;
-  origin.r = env->tree->branch[i].d;
-  return (origin);
-  // a little lower than middle window || give this tree some room to grow
-}
 
 void tree_trunks_apple_pie(t_env *env)
 {
@@ -232,6 +224,9 @@ void tree(t_env *env)
   int    i;
 
   i = 0;
+  mlx_mouse_hook(env->win, tree_mouse, env);
+  mlx_key_hook(env->win, tree_keys, env);
+  // mlx_expose_hook(env->win, expose_tree, env);
   tree_trunks_apple_pie(env);
   while (i < env->tree->brs)
   {
@@ -274,12 +269,7 @@ void fractals(int fractal, t_env *env)
   env->image = make_img(env->mlx);
 
   if (fractal == 1)
-  {
-    mlx_mouse_hook(env->win, tree_mouse, env);
-    mlx_key_hook(env->win, tree_keys, env);
-    // mlx_expose_hook(env->win, expose_tree, env);
     tree(env);
-  }
   // if (fractal == 2)
   // {
   //
@@ -294,6 +284,8 @@ void fractals(int fractal, t_env *env)
   //
   //
   // }
+  if (fractal == 4)
+    snowflake_questionmark(env);
   mlx_loop(env->mlx);
 }
 

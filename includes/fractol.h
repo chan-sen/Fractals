@@ -50,6 +50,18 @@ typedef struct	s_line
 	int						etmp;
 }								t_line;
 
+
+typedef struct	s_sf
+{
+	t_branch			*branch;
+	t_point				center;
+	int						b;
+	int						color;
+  int           len;
+  int           brs;
+	int						max;
+}								t_sf;
+
 typedef struct	s_tree
 {
 	t_branch			*branch;
@@ -90,7 +102,37 @@ typedef struct  s_env
 	t_tree				*tree;
 	t_julia				*juli;
 	t_mandel			*mand;
+	t_sf					*sf;
 }               t_env;
+
+
+void fractals(int fractal, t_env *env);
+int     check(char **argv);
+
+
+t_env *make_env(char **argv, int fractal);
+t_img   *make_img(void *mlx);
+t_tree *make_tree(char **argv);
+
+
+int tree_keys(int key, t_env *env);
+
+int tree_mouse(int key, int x, int y, t_env *env);
+
+void tree(t_env *env);
+void tree_trunks_apple_pie(t_env *env);
+t_point  center_tree(t_env *env, int i);
+void branch(t_env *env, t_point a, int br);
+void draw_branch(t_env *env, t_line line);
+t_line line(t_point a, t_point b);
+t_point pointb(t_env *env, t_point a, int j, int br);
+
+t_point bpoint(t_env *env, t_point a, int j, int br);
+void freeze(t_env *env, t_point a, int br);
+void freezer(t_env *env, t_line line);
+t_point  center_sf(t_env *env, int i);
+void snowflake_questionmark(t_env *env);
+t_sf *make_snowflake_questionmark();
 
 void put_image_pixel(t_img *image, int x, int y, int color);
 
