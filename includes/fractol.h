@@ -86,12 +86,12 @@ typedef struct  s_env
 {
 	void 					*mlx;
 	void 					*win;
-	t_img					image;
+	t_img					*image;
 	t_tree				*tree;
 	t_julia				*juli;
 	t_mandel			*mand;
 }               t_env;
 
-void put_image_pixel(t_img image, int x, int y, int color);
+void put_image_pixel(t_img *image, int x, int y, int color);
 
 #endif

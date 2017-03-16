@@ -36,7 +36,8 @@ t_tree *make_tree(char **argv)
   //   env->tree->brs = ft_atoi(argv[2]);
   // else
     // env->tree->brs = 2;
-  tree = (t_tree*)ft_memalloc(sizeof(t_tree));
+  if (!(tree = (t_tree*)ft_memalloc(sizeof(t_tree))))
+    return (NULL);
   if (argv[2] != NULL)
     tree->brs = ft_atoi(argv[2]);
   else
@@ -47,7 +48,7 @@ t_tree *make_tree(char **argv)
 
   while (b < tree->brs)
   {
-    tree->branch[b].d = 20;
+    tree->branch[b].d = 100;
     tree->branch[b].rad = (180 / (tree->brs + 1)) * (b + 1);
     b++;
   }
@@ -61,7 +62,9 @@ t_tree *make_tree(char **argv)
 t_env *make_env(char **argv, int fractal)
 {
   t_env   *ret;
-  ret = (t_env *)malloc(sizeof(t_env));
+
+  if (!(ret = (t_env *)malloc(sizeof(t_env))))
+    return (NULL);
   if (fractal == 1)
     ret->tree = make_tree(argv);
   // if (fractal == 2)
@@ -75,8 +78,7 @@ int tree_mouse(int key, int x, int y, t_env *env)
 {
   int a;
 
-  a = x;
-  a += y;
+  a = x + y;
   if (key == 5)
     env->tree->branch[env->tree->b].rad += 0.05;
   if (key == 4)
@@ -119,8 +121,8 @@ t_point pointb(t_env *env, t_point a, int j, int br) // j for branch # (angle an
   float     x;
   float     y;
 
-  b.r = ((env->tree->branch[j].d) / env->tree->max) * br + 1;
-  b.rad += a.rad + env->tree->branch[j].rad;
+  b.r = ((env->tree->branch[j].d) / env->tree->max) * (env->tree->brs - (br + 1));
+  b.rad = (a.rad - 90) + env->tree->branch[j].rad;
 
   x = (b.r * sin(b.rad)) * -1;
   y = (b.r * cos(b.rad));
@@ -151,6 +153,7 @@ void draw_branch(t_env *env, t_line line)
   line.xi = line.x1 < line.x2 ? 1 : -1;
   line.yi = line.y1 < line.y2 ? 1 : -1;
   line.e = (line.dx > line.dy ? line.dx : -(line.dy)) / 2;
+  printf("drawbranch\n");
   while (!(line.x1 == line.x2 && line.y1 == line.y2))
   {
     put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
@@ -163,7 +166,7 @@ void draw_branch(t_env *env, t_line line)
     if (line.etmp < line.dy)
     {
       line.e += line.dx;
-      line.y1 += line.y1;
+      line.y1 += line.yi;
     }
   }
   put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
@@ -171,26 +174,29 @@ void draw_branch(t_env *env, t_line line)
 
 #include <stdio.h>
 
-void branch(t_env *env, t_point a)
+void branch(t_env *env, t_point a, int br)
 {
-  int         br;
-  int         j;
-
-  br = 0;
-  j = 0;
   printf("hello\n\n");
 
+  int     j;
   // VVVVV INFINITY LOOP
 
-  while (br < env->tree->max)
+  j = 0;
+  if (br < env->tree->max)
   {
     while (j < env->tree->brs)
     {
+      printf("hi\n");
       draw_branch(env, line(a, pointb(env, a, j, br)));
-      branch(env, pointb(env, a, j, br));
       j++;
     }
-    br++;
+    j -= env->tree->brs;
+    while (j < env->tree->brs)
+    {
+      printf("branch\n");
+      branch(env, pointb(env, a, j, br), br + 1);
+      j++;
+    }
   }
 }
 
@@ -200,11 +206,25 @@ t_point  center_tree(t_env *env, int i)
   t_point   origin;
 
   origin.x = (WIN_WDT / 2);
-  origin.y = (WIN_HGT / 2) - 50;
+  origin.y = (WIN_HGT / 2) + 50;
   origin.rad = env->tree->branch[i].rad;
   origin.r = env->tree->branch[i].d;
   return (origin);
   // a little lower than middle window || give this tree some room to grow
+}
+
+void tree_trunks_apple_pie(t_env *env)
+{
+  int     x;
+  int     y;
+
+  x = (WIN_WDT / 2);
+  y = (WIN_HGT / 2) + 200;
+  while (y > (WIN_HGT / 2) + 50)
+  {
+    put_image_pixel(env->image, x, y, 0x00FF00);
+    y--;
+  }
 }
 
 void tree(t_env *env)
@@ -212,14 +232,28 @@ void tree(t_env *env)
   int    i;
 
   i = 0;
-  env->image.img = mlx_new_image(env->mlx, WIN_WDT, WIN_HGT);
+  tree_trunks_apple_pie(env);
   while (i < env->tree->brs)
   {
-    branch(env, center_tree(env, i));
+    branch(env, center_tree(env, i), 0);
     i++;
   }
-  mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
+  mlx_put_image_to_window(env->mlx, env->win, env->image->img, 0, 0);
 }
+
+t_img   *make_img(void *mlx)
+{
+  t_img   *image;
+
+  image = (t_img *)ft_memalloc(sizeof(t_img));
+  image->img = mlx_new_image(mlx, WIN_WDT, WIN_HGT);
+  image->data = mlx_get_data_addr(image->img, &image->bits,
+    &image->sizeline, &image->endian);
+  image->height = WIN_HGT;
+  image->width = WIN_WDT;
+  return (image);
+}
+
 //
 // void reset_tree(t_env *env)
 // {
@@ -233,8 +267,12 @@ void tree(t_env *env)
 
 void fractals(int fractal, t_env *env)
 {
-  env->mlx = mlx_init();
+  if (!(env->mlx = mlx_init()))
+    exit (0);
   env->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT, "Fract'ol4sher");
+
+  env->image = make_img(env->mlx);
+
   if (fractal == 1)
   {
     mlx_mouse_hook(env->win, tree_mouse, env);
@@ -264,7 +302,6 @@ int     main(int argc, char **argv)
   int     fractal;
   t_env   *env;
 
-  env = NULL;
   if (argc < 2 || argc > 4)
     return (err_msg("Usage : ./fractol <tree/julia/mandel>\n"));
   fractal = check(argv);
