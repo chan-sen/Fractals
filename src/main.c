@@ -57,7 +57,7 @@ t_tree *make_tree(char **argv)
   }
   // env->tree->branch[env->tree->brs] = NULL;
   tree->len = 100;
-  tree->brs > 4 ? (tree->max = 4) : (tree->max = 6);
+  tree->max = 1;
   return (tree);
 }
 
@@ -84,9 +84,9 @@ int tree_mouse(int key, int x, int y, t_env *env)
 
   a = x + y;
   if (key == 5)
-    env->tree->branch[env->tree->b].rad += 0.05;
+    env->tree->branch[env->tree->b].rad += (M_PI / 32);
   if (key == 4)
-    env->tree->branch[env->tree->b].rad -= 0.05;
+    env->tree->branch[env->tree->b].rad -= (M_PI / 32);
   return (key);
 }
 
@@ -109,7 +109,7 @@ int tree_keys(int key, t_env *env)
     env->tree->branch[env->tree->b].d -= 0.5;
   if (key == 3 && env->tree->max < 10)
     env->tree->max += 1;
-  if (key == 15 && env->tree->max > 2)
+  if (key == 15 && env->tree->max > 1)
     env->tree->max -= 1;
   printf("max : %d", env->tree->max);
   return (key);
@@ -129,8 +129,12 @@ t_point pointb(t_env *env, t_point a, int j, int br) // j for branch # (angle an
   b.x = x + a.x;
   b.y = y + a.y;
 
-  b.r = ((env->tree->branch[j].d) - (env->tree->branch[j].d / (br + 1)));
+  b.r = a.r * 0.75;
   b.rad = (a.rad + (M_PI / 2)) + env->tree->branch[j].rad;
+  if (br <= 2)
+  {
+    printf("j: %d, a.rad: %f, a.r: %f\n", j, a.rad, a.r);
+  }
 
   return (b);
 }
@@ -174,6 +178,8 @@ void draw_branch(t_env *env, t_line line)
   put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
 }
 
+#include <stdio.h>
+
 void branch(t_env *env, t_point a, int br)
 {
   int     j;
@@ -181,14 +187,19 @@ void branch(t_env *env, t_point a, int br)
   j = 0;
   if (br < env->tree->max)
   {
+    if (br <= 2)
+      printf("br: %d\nj: %d\ntree->max: %d\n", br, j, env->tree->max);
     while (j < env->tree->brs)
     {
+      printf("draw_branch:\n");
       draw_branch(env, line(a, pointb(env, a, j, br)));
+      printf("branch_drawn\n");
       j++;
     }
     j -= env->tree->brs;
     while (j < env->tree->brs)
     {
+      printf("branch:\n");
       branch(env, pointb(env, a, j, br), br + 1);
       j++;
     }

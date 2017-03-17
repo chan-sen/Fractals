@@ -18,8 +18,8 @@
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
 
-# define  WIN_HGT 1000
-# define  WIN_WDT 1000
+# define  WIN_HGT 500
+# define  WIN_WDT 500
 
 typedef struct  s_branch
 {
