@@ -12,6 +12,16 @@
 
 #include "./../includes/fractol.h"
 
+int       fractal_msg()
+{
+  ft_putstr("Usage : ./fractol <tree/julia/mandel>\n");
+  ft_putstr("<tree> [ branches ]\n");
+  ft_putstr("<julia>\n");
+  ft_putstr("<mandel>\n");
+  ft_putstr("<snowflake\\?>\n");
+  return (0);
+}
+
 t_point  center_tree(t_env *env, int i)
 {
   t_point   origin;

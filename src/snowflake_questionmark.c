@@ -87,7 +87,7 @@ void snowflake_questionmark(t_env *env)
       freeze(env, center_sf(env, i), 0);
       i++;
     }
-    mlx_put_image_to_window(env->mlx, env->win, env->image->img, 0, 0);
+    mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
 }
 
 

@@ -98,7 +98,7 @@ typedef struct  s_env
 {
 	void 					*mlx;
 	void 					*win;
-	t_img					*image;
+	t_img					image;
 	t_tree				*tree;
 	t_julia				*juli;
 	t_mandel			*mand;
@@ -111,7 +111,7 @@ int     check(char **argv);
 
 
 t_env *make_env(char **argv, int fractal);
-t_img   *make_img(void *mlx);
+t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
 
 
@@ -119,7 +119,7 @@ int tree_keys(int key, t_env *env);
 
 int tree_mouse(int key, int x, int y, t_env *env);
 
-void tree(t_env *env);
+int tree_hook(t_env *env);
 void tree_trunks_apple_pie(t_env *env);
 t_point  center_tree(t_env *env, int i);
 void branch(t_env *env, t_point a, int br);
@@ -134,6 +134,8 @@ t_point  center_sf(t_env *env, int i);
 void snowflake_questionmark(t_env *env);
 t_sf *make_snowflake_questionmark();
 
-void put_image_pixel(t_img *image, int x, int y, int color);
+void put_image_pixel(t_img image, int x, int y, int color);
+
+int       fractal_msg();
 
 #endif
