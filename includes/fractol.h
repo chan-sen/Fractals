@@ -18,8 +18,8 @@
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
 
-# define  WIN_HGT 500
-# define  WIN_WDT 500
+# define  WIN_HGT 1000
+# define  WIN_WDT 1000
 
 typedef struct  s_branch
 {
@@ -80,7 +80,16 @@ typedef struct	s_mandel
 
 typedef	struct	s_julia
 {
-
+	double				rec;
+	double				imc;
+	double				oldre;
+	double				oldim;
+	double				newre;
+	double				newim;
+	double				zoom;
+	double				x;
+	double				y;
+	int						maxi;
 }								t_julia;
 
 typedef struct	s_img
@@ -119,20 +128,24 @@ int tree_keys(int key, t_env *env);
 
 int tree_mouse(int key, int x, int y, t_env *env);
 
+int	julia_hook(t_env *env);
+
+
 int tree_hook(t_env *env);
 void tree_trunks_apple_pie(t_env *env);
 t_point  center_tree(t_env *env, int i);
 void branch(t_env *env, t_point a, int br);
 void draw_branch(t_env *env, t_line line);
 t_line line(t_point a, t_point b);
-t_point pointb(t_env *env, t_point a, int j, int br);
+t_point pointb(t_env *env, t_point a, int j);
+int	reset_tree(t_env *env);
 
+int snowflake_questionmark(t_env *env);
+t_sf *make_snowflake_questionmark();
+t_point  center_sf(t_env *env, int i);
 t_point bpoint(t_env *env, t_point a, int j, int br);
 void freeze(t_env *env, t_point a, int br);
 void freezer(t_env *env, t_line line);
-t_point  center_sf(t_env *env, int i);
-void snowflake_questionmark(t_env *env);
-t_sf *make_snowflake_questionmark();
 
 void put_image_pixel(t_img image, int x, int y, int color);
 

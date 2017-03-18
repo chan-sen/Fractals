@@ -12,6 +12,8 @@
 
 #include "./../includes/fractol.h"
 
+#include <stdio.h>
+
 void freezer(t_env *env, t_line line)
 {
   line.dx = abs(line.x2 - line.x1);
@@ -75,21 +77,21 @@ void freeze(t_env *env, t_point a, int br)
   }
 }
 
-void snowflake_questionmark(t_env *env)
+int snowflake_questionmark(t_env *env)
 {
     int    i;
 
     i = 0;
+    env->image = make_img(env->mlx);
     mlx_key_hook(env->win, tree_keys, env);
-    tree_trunks_apple_pie(env);
     while (i < env->sf->brs)
     {
       freeze(env, center_sf(env, i), 0);
       i++;
     }
     mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
+    return (1);
 }
-
 
 t_sf *make_snowflake_questionmark()
 {
