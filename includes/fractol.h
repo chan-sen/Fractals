@@ -18,8 +18,8 @@
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
 
-# define  WIN_HGT 1000
-# define  WIN_WDT 1000
+# define  WIN_HGT 500
+# define  WIN_WDT 500
 
 typedef struct  s_branch
 {
@@ -87,9 +87,10 @@ typedef	struct	s_julia
 	double				newre;
 	double				newim;
 	double				zoom;
-	double				x;
-	double				y;
+	double				mx;
+	double				my;
 	int						maxi;
+	int						color;
 }								t_julia;
 
 typedef struct	s_img
@@ -122,6 +123,10 @@ int     check(char **argv);
 t_env *make_env(char **argv, int fractal);
 t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
+t_julia *make_julia(char **argv);
+t_mandel *make_mandel(char **argv);
+t_sf *make_snowflake_questionmark();
+
 
 
 int tree_keys(int key, t_env *env);
@@ -141,7 +146,6 @@ t_point pointb(t_env *env, t_point a, int j);
 int	reset_tree(t_env *env);
 
 int snowflake_questionmark(t_env *env);
-t_sf *make_snowflake_questionmark();
 t_point  center_sf(t_env *env, int i);
 t_point bpoint(t_env *env, t_point a, int j, int br);
 void freeze(t_env *env, t_point a, int br);
