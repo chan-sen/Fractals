@@ -36,6 +36,7 @@ int     check(char **argv)
 
 int     exit_hook(t_env *env)
 {
+  env = NULL;
   exit(0);
 }
 
@@ -46,22 +47,14 @@ int     julia_keys(int keycode, t_env *env)
     mlx_destroy_window(env->mlx, env->win);
     exit (0);
   }
-  // if (keycode == 0)
-  //   env->juli->mx += 0.0003 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 2)
-  //   env->juli->mx -= 0.0003 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 1)
-  //   env->juli->my += 0.0003 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 13)
-  //   env->juli->my -= 0.0003 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 6)
-  //   env->juli->rec += 0.0002 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 7)
-  //   env->juli->rec -= 0.0002 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 8)
-  //   env->juli->imc += 0.0002 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 9)
-  //   env->juli->imc -= 0.0002 * env->juli->frametime / env->juli->zoom;
+  if (keycode == 2)
+    env->juli->rec += 0.02 * env->juli->frametime / env->juli->zoom;
+  if (keycode == 0)
+    env->juli->rec -= 0.02 * env->juli->frametime / env->juli->zoom;
+  if (keycode == 13)
+    env->juli->imc += 0.02 * env->juli->frametime / env->juli->zoom;
+  if (keycode == 1)
+    env->juli->imc -= 0.02 * env->juli->frametime / env->juli->zoom;
   return (keycode);
 }
 
@@ -148,10 +141,21 @@ int julia_iterate(t_env *env)
   return (i);
 }
 
-int    motion_hook(int x, int y, t_env *env)
+int    julia_mouse(int key, int x, int y, t_env *env)
 {
-  env->juli->mx = x * env->juli->frametime / env->juli->zoom;
-  env->
+  if (key == 5)
+  {
+    env->juli->zoom += pow(0.01, env->juli->frametime);
+    env->juli->mx = x * env->juli->frametime / env->juli->zoom;
+    env->juli->my = y * env->juli->frametime / env->juli->zoom;
+  }
+  if (key == 4)
+  {
+    env->juli->zoom -= pow(0.01, env->juli->frametime);
+    env->juli->mx = x * env->juli->frametime / env->juli->zoom;
+    env->juli->my = y * env->juli->frametime / env->juli->zoom;
+  }
+  return (key);
 }
 
 
@@ -165,7 +169,7 @@ int   julia_hook(t_env *env)
 
   set3to0(&i, &x, &y);
   env->image = make_img(env->mlx);
-  mlx_hook(env->win, 6, 0, motion_hook, env);
+  mlx_hook(env->win, 6, 0, julia_mouse, env);
   mlx_hook(env->win, 2, 0, julia_keys, env);
   // mlx_expose_hook(env->win, reset_tree, env);
   while (y < WIN_HGT)
@@ -223,8 +227,6 @@ int tree_mouse(int key, int x, int y, t_env *env)
 
 int tree_keys(int key, t_env *env)
 {
-  if (key)
-    printf("keypresd: %d", key);
   if (key == 53)
   {
     mlx_destroy_window(env->mlx, env->win);
@@ -242,7 +244,6 @@ int tree_keys(int key, t_env *env)
     env->tree->max += 1;
   if (key == 15 && env->tree->max > 1)
     env->tree->max -= 1;
-  printf("max : %d", env->tree->max);
   return (key);
 }
 
