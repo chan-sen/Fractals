@@ -47,14 +47,14 @@ int     julia_keys(int keycode, t_env *env)
     mlx_destroy_window(env->mlx, env->win);
     exit (0);
   }
-  if (keycode == 2)
-    env->juli->rec += 0.02 * env->juli->frametime / env->juli->zoom;
-  if (keycode == 0)
-    env->juli->rec -= 0.02 * env->juli->frametime / env->juli->zoom;
-  if (keycode == 13)
-    env->juli->imc += 0.02 * env->juli->frametime / env->juli->zoom;
-  if (keycode == 1)
-    env->juli->imc -= 0.02 * env->juli->frametime / env->juli->zoom;
+  // if (keycode == 2)
+  //   env->juli->rec += 0.02 * env->juli->frametime / env->juli->zoom;
+  // if (keycode == 0)
+  //   env->juli->rec -= 0.02 * env->juli->frametime / env->juli->zoom;
+  // if (keycode == 13)
+  //   env->juli->imc += 0.02 * env->juli->frametime / env->juli->zoom;
+  // if (keycode == 1)
+  //   env->juli->imc -= 0.02 * env->juli->frametime / env->juli->zoom;
   return (keycode);
 }
 
@@ -88,32 +88,21 @@ int     color_juli(int i)
 {
   if (i <= 64)
     return (jcolor1(i));
-  if (i >= 65 && i <= 128)
-    return (jcolor1(i - 64));
-  if (i >= 129 && i <= 192)
-    return (jcolor1(i - 129));
-  if (i >= 193 && i <= 256)
-    return (jcolor1(i - 193));
-  if (i >= 257)
-    return (jcolor1(i - 257));
+  if (i >= 65)
+    return (jcolor1(i % 64));
   return (0xFFFFFF);
 }
 
-t_julia *make_julia(char **argv)
+t_julia *make_julia()
 {
   t_julia   *julia;
 
   if (!(julia = (t_julia *)ft_memalloc(sizeof(t_julia))))
     return (NULL);
-  if (argv[2] != NULL)
-    julia->rec = ft_atoi(argv[2]);
-  else
-    julia->rec = -0.7;
-  if (argv[3] != NULL)
-    julia->imc = ft_atoi(argv[3]);
-  else
-    julia->imc = 0.27015;
+  julia->rec = -0.7;
+  julia->imc = 0.27015;
   julia->zoom = 1;
+  julia->z = 0;
   julia->mx = 0;
   julia->my = 0;
   julia->maxi = 300;
@@ -149,29 +138,47 @@ void juli_zoom(double x, double y, double *jx, double *jy)
 
 int    julia_mouse(int key, int x, int y, t_env *env)
 {
-  double     jx;
-  double     jy;
+  double jx;
+  double jy;
 
   juli_zoom(x, y, &jx, &jy);
+  jx = jx * env->juli->frametime / env->juli->zoom;
+  jy = jy * env->juli->frametime / env->juli->zoom;
+  jx -= env->juli->mx;
+  jy -= env->juli->my;
   if (key == 5)
   {
-    env->juli->zoom += pow(0.0001, env->juli->frametime);
+    env->juli->zoom += pow(1.001, env->juli->frametime);
     env->juli->mx += jx * env->juli->frametime / env->juli->zoom;
     env->juli->my += jy * env->juli->frametime / env->juli->zoom;
+    env->juli->z++;
+
   }
-  if (key == 4)
+  else if (key == 4)
   {
-    env->juli->zoom -= pow(0.0001, env->juli->frametime);
+    env->juli->zoom -= pow(1.001, env->juli->frametime);
     env->juli->mx -= jx * env->juli->frametime / env->juli->zoom;
     env->juli->my -= jy * env->juli->frametime / env->juli->zoom;
+    env->juli->z--;
   }
-  return (key);
+  return (key + x + y);
 }
 
-// int    julia_motion(int x, int y, t_env *env)
-// {
-//
-// }
+int    julia_motion(int x, int y, t_env *env)
+{
+  double    jx;
+  double    jy;
+
+  juli_zoom(x, y, &jx, &jy);
+  if (env->juli->z == 0)
+  {
+    env->juli->rec = jx; // * env->juli->frametime / env->juli->zoom;
+    env->juli->imc = jy; // * env->juli->frametime / env->juli->zoom;
+  }
+  // env->juli->mx = env->juli->rec * env->juli->frametime / env->juli->zoom;
+  // env->juli->my = env->juli->imc * env->juli->frametime / env->juli->zoom;
+  return (x+y);
+}
 
 #include <time.h>
 
@@ -183,7 +190,6 @@ int   julia_hook(t_env *env)
 
   set3to0(&i, &x, &y);
   env->image = make_img(env->mlx);
-  // mlx_expose_hook(env->win, reset_tree, env);
   while (y < WIN_HGT)
   {
     x = 0;
@@ -205,7 +211,7 @@ int   julia_hook(t_env *env)
   env->juli->time = time(NULL);
   env->juli->frametime = env->juli->time - env->juli->oldtime;
   mlx_mouse_hook(env->win, julia_mouse, env);
-  // mlx_hook(env->win, 6, 0, julia_motion, env);
+  mlx_hook(env->win, 6, 0, julia_motion, env);
   mlx_hook(env->win, 2, 0, julia_keys, env);
   return (1);
 }
@@ -220,7 +226,7 @@ t_env *make_env(char **argv, int fractal)
   if (fractal == 1)
     ret->tree = make_tree(argv);
   if (fractal == 2)
-    ret->juli = make_julia(argv);
+    ret->juli = make_julia();
   // if (fractal == 3)
   //   make_mandel(env);
   if (fractal == 4)

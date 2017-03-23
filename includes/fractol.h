@@ -18,8 +18,8 @@
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
 
-# define  WIN_HGT 600
-# define  WIN_WDT 600
+# define  WIN_HGT 1200
+# define  WIN_WDT 1200
 
 typedef struct  s_branch
 {
@@ -94,7 +94,7 @@ typedef	struct	s_julia
 	double				time;
 	int						maxi;
 	int						color;
-	int						zin;
+	int						z;
 }								t_julia;
 
 typedef struct	s_img
@@ -127,7 +127,7 @@ int     check(char **argv);
 t_env *make_env(char **argv, int fractal);
 t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
-t_julia *make_julia(char **argv);
+t_julia *make_julia();
 t_mandel *make_mandel(char **argv);
 t_sf *make_snowflake_questionmark();
 
