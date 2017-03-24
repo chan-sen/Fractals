@@ -18,8 +18,8 @@
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
 
-# define  WIN_HGT 1200
-# define  WIN_WDT 1200
+# define  WIN_HGT 1000
+# define  WIN_WDT 1000
 
 typedef struct  s_branch
 {
@@ -90,8 +90,8 @@ typedef	struct	s_julia
 	double				mx;
 	double				my;
 	double				frametime;
-	double				oldtime;
-	double				time;
+	time_t				oldtime;
+	time_t				time;
 	int						maxi;
 	int						color;
 	int						z;

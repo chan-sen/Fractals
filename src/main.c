@@ -12,6 +12,9 @@
 
 #include "./../includes/fractol.h"
 
+
+#include <time.h>
+
 #include <stdio.h>
 
 void set3to0(int *a, int *b, int *c)
@@ -99,13 +102,16 @@ t_julia *make_julia()
 
   if (!(julia = (t_julia *)ft_memalloc(sizeof(t_julia))))
     return (NULL);
-  julia->rec = -0.7;
-  julia->imc = 0.27015;
+  julia->rec = 0;
+  julia->imc = 0;
   julia->zoom = 1;
   julia->z = 0;
   julia->mx = 0;
   julia->my = 0;
   julia->maxi = 300;
+  // julia->time = time(NULL);
+  // julia->oldtime = 0;
+  // julia->frametime = 0;
   return (julia);
 }
 
@@ -120,7 +126,7 @@ int julia_iterate(t_env *env)
     env->juli->oldim = env->juli->newim;
     env->juli->newre = env->juli->oldre * env->juli->oldre
       - env->juli->oldim * env->juli->oldim + env->juli->rec;
-    env->juli->newim = 2 * env->juli->oldre * env->juli->oldim
+    env->juli->newim = 2.0 * env->juli->oldre * env->juli->oldim
       + env->juli->imc;
     if ((env->juli->newre * env->juli->newre
       + env->juli->newim * env->juli->newim) > 4)
@@ -132,8 +138,8 @@ int julia_iterate(t_env *env)
 
 void juli_zoom(double x, double y, double *jx, double *jy)
 {
-  (*jx) = (x - (WIN_WDT / 2)) / (WIN_WDT / 2);
-  (*jy) = (y - (WIN_HGT / 2)) / (WIN_HGT / 2);
+  (*jx) = (x - (WIN_WDT / 2.0)) / (WIN_WDT / 2.0);
+  (*jy) = (y - (WIN_HGT / 2.0)) / (WIN_HGT / 2.0);
 }
 
 int    julia_mouse(int key, int x, int y, t_env *env)
@@ -142,23 +148,25 @@ int    julia_mouse(int key, int x, int y, t_env *env)
   double jy;
 
   juli_zoom(x, y, &jx, &jy);
-  jx = jx * env->juli->frametime / env->juli->zoom;
-  jy = jy * env->juli->frametime / env->juli->zoom;
-  jx -= env->juli->mx;
-  jy -= env->juli->my;
+  jx *= env->juli->frametime / env->juli->zoom;
+  jy *= env->juli->frametime / env->juli->zoom;
+  // jx -= env->juli->mx;
+  // jy -= env->juli->my;
   if (key == 5)
   {
-    env->juli->zoom += pow(1.001, env->juli->frametime);
-    env->juli->mx += jx * env->juli->frametime / env->juli->zoom;
-    env->juli->my += jy * env->juli->frametime / env->juli->zoom;
+    #include <stdio.h>
+    env->juli->zoom += 1.00001;
+    env->juli->mx += jx; // * env->juli->frametime / env->juli->zoom;
+    env->juli->my += jy; // * env->juli->frametime / env->juli->zoom;
+    printf("mx: %f, my: %f\n\n", env->juli->mx, env->juli->my);
     env->juli->z++;
 
   }
-  else if (key == 4)
+  else if (key == 4 && env->juli->z != 0)
   {
-    env->juli->zoom -= pow(1.001, env->juli->frametime);
-    env->juli->mx -= jx * env->juli->frametime / env->juli->zoom;
-    env->juli->my -= jy * env->juli->frametime / env->juli->zoom;
+    env->juli->zoom -= 1.00001;
+    env->juli->mx -= jx;
+    env->juli->my -= jy;
     env->juli->z--;
   }
   return (key + x + y);
@@ -172,15 +180,16 @@ int    julia_motion(int x, int y, t_env *env)
   juli_zoom(x, y, &jx, &jy);
   if (env->juli->z == 0)
   {
-    env->juli->rec = jx; // * env->juli->frametime / env->juli->zoom;
-    env->juli->imc = jy; // * env->juli->frametime / env->juli->zoom;
+    env->juli->mx = 0; // * env->juli->frametime / env->juli->zoom;
+    env->juli->my = 0; // * env->juli->frametime / env->juli->zoom;
   }
+  env->juli->rec = jx * env->juli->frametime / env->juli->zoom;
+  env->juli->imc = jy * env->juli->frametime / env->juli->zoom;
   // env->juli->mx = env->juli->rec * env->juli->frametime / env->juli->zoom;
   // env->juli->my = env->juli->imc * env->juli->frametime / env->juli->zoom;
   return (x+y);
 }
 
-#include <time.h>
 
 int   julia_hook(t_env *env)
 {
@@ -196,9 +205,9 @@ int   julia_hook(t_env *env)
     while (x < WIN_WDT)
     {
       i = 0;
-      env->juli->newre = 1.5 * (x - WIN_WDT / 2)
+      env->juli->newre = 1.5 * (x - WIN_WDT / 2.0)
         / (0.5 * env->juli->zoom * WIN_WDT) + env->juli->mx;
-      env->juli->newim = (y - WIN_HGT / 2)
+      env->juli->newim = (y - WIN_HGT / 2.0)
         / (0.5 * env->juli->zoom * WIN_HGT) + env->juli->my;
       env->juli->color = color_juli(julia_iterate(env));
       put_image_pixel(env->image, x, y, env->juli->color);
@@ -209,9 +218,9 @@ int   julia_hook(t_env *env)
   mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
   env->juli->oldtime = env->juli->time;
   env->juli->time = time(NULL);
-  env->juli->frametime = env->juli->time - env->juli->oldtime;
-  mlx_mouse_hook(env->win, julia_mouse, env);
+  env->juli->frametime = difftime(env->juli->time, env->juli->oldtime);
   mlx_hook(env->win, 6, 0, julia_motion, env);
+  mlx_mouse_hook(env->win, julia_mouse, env);
   mlx_hook(env->win, 2, 0, julia_keys, env);
   return (1);
 }
