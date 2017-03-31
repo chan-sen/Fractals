@@ -37,15 +37,18 @@ int mandel_mouse(int key, int x, int y, t_env *env)
   double    my;
 
   fractal_circle(x, y, &mx, &my);
+  // mx -= 0.5000;
+  mx = mx / env->man->zoom + env->man->mx;
+  my = my / env->man->zoom + env->man->my;
   if (key == 5)
   {
-    env->man->zoom *= 1.01;
-    env->man->mx = mx;
-    env->man->my = my;
+    env->man->zoom *= 1.05;
+    env->man->mx = mx; // - WIN_WDT / env->man->zoom / 2;
+    env->man->my = my; // - WIN_HGT / env->man->zoom / 2;
   }
   if (key == 4)
   {
-    env->man->zoom /= 1.01;
+    env->man->zoom /= 1.05; // , env->man->frametime);
     env->man->mx = mx;
     env->man->my = my;
   }
@@ -65,7 +68,7 @@ int       howie_mandel(t_env *env)
     x = 0;
     while(x < WIN_WDT)
     {
-      env->man->rep = 1.5 * (x - WIN_WDT / 2)
+      env->man->rep = (x - WIN_WDT / 2)
         / (0.5 * env->man->zoom * WIN_WDT) + env->man->mx;
       env->man->imp = (y - WIN_HGT / 2)
         / (0.5 * env->man->zoom * WIN_HGT) + env->man->my;
@@ -79,6 +82,9 @@ int       howie_mandel(t_env *env)
   mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
   mlx_mouse_hook(env->win, mandel_mouse, env);
   mlx_hook(env->win, 2, 0, mandel_keys, env);
+  // env->man->oldtime = env->man->time;
+  // env->man->time = time(NULL);
+  // env->man->frametime = difftime(env->man->time, env->man->oldtime);
   return (1);
 }
 

@@ -14,6 +14,7 @@
 # define FRACTOL_H
 
 # include <math.h>
+# include <time.h>
 
 # include "./../libft/libft.h"
 # include "./../minilibx/mlx.h"
@@ -84,6 +85,9 @@ typedef struct	s_mandel
 	double				zoom;
 	double				mx;
 	double				my;
+	double				frametime;
+	time_t				oldtime;
+	time_t				time;
 	int						maxi;
 }								t_mandel;
 
