@@ -1,5 +1,5 @@
 
-#include "fractol.h"
+#include "../includes/fractol.h"
 
 int       man_iter(t_env *env)
 {
@@ -45,14 +45,14 @@ int mandel_mouse(int key, int x, int y, t_env *env)
   }
   if (key == 4)
   {
-    env->man->zoom /= 1 .01;
+    env->man->zoom /= 1.01;
     env->man->mx = mx;
     env->man->my = my;
   }
   return (key + x + y);
 }
 
-int       mandel_hook(t_env *env)
+int       howie_mandel(t_env *env)
 {
   int       i;
   int       x;

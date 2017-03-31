@@ -75,7 +75,16 @@ typedef struct	s_tree
 
 typedef struct	s_mandel
 {
-
+	double				rep;
+	double				imp;
+	double				oldre;
+	double				oldim;
+	double				newre;
+	double				newim;
+	double				zoom;
+	double				mx;
+	double				my;
+	int						maxi;
 }								t_mandel;
 
 typedef	struct	s_julia
@@ -89,6 +98,8 @@ typedef	struct	s_julia
 	double				zoom;
 	double				mx;
 	double				my;
+	// double				omx;
+	// double				omy;
 	double				frametime;
 	time_t				oldtime;
 	time_t				time;
@@ -115,7 +126,7 @@ typedef struct  s_env
 	t_img					image;
 	t_tree				*tree;
 	t_julia				*juli;
-	t_mandel			*mand;
+	t_mandel			*man;
 	t_sf					*sf;
 }               t_env;
 
@@ -128,7 +139,7 @@ t_env *make_env(char **argv, int fractal);
 t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
 t_julia *make_julia();
-t_mandel *make_mandel(char **argv);
+t_mandel *make_mandel();
 t_sf *make_snowflake_questionmark();
 
 
@@ -137,8 +148,9 @@ int tree_keys(int key, t_env *env);
 
 int tree_mouse(int key, int x, int y, t_env *env);
 
-int	julia_hook(t_env *env);
+int	howie_mandel(t_env *env);
 
+int	julia_hook(t_env *env);
 
 int tree_hook(t_env *env);
 void tree_trunks_apple_pie(t_env *env);
@@ -157,6 +169,14 @@ void freezer(t_env *env, t_line line);
 
 void put_image_pixel(t_img image, int x, int y, int color);
 
+int	color_juli(int i);
+
+void fractal_circle(double x, double y, double *jx, double *jy);
+
+
 int       fractal_msg();
+
+void set3to0(int *a, int *b, int *c);
+void set4to0(double *a, double *b, double *c, double *d);
 
 #endif

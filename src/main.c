@@ -24,6 +24,14 @@ void set3to0(int *a, int *b, int *c)
   *c = 0;
 }
 
+void set4to0(double *a, double *b, double *c, double *d)
+{
+  *a = 0;
+  *b = 0;
+  *c = 0;
+  *d = 0;
+}
+
 int     check(char **argv)
 {
   if (ft_strcmp(argv[1], "tree") == 0)
@@ -109,9 +117,9 @@ t_julia *make_julia()
   julia->mx = 0;
   julia->my = 0;
   julia->maxi = 300;
-  // julia->time = time(NULL);
-  // julia->oldtime = 0;
-  // julia->frametime = 0;
+  julia->time = time(NULL);
+  julia->oldtime = 0;
+  julia->frametime = 0;
   return (julia);
 }
 
@@ -136,7 +144,7 @@ int julia_iterate(t_env *env)
   return (i);
 }
 
-void juli_zoom(double x, double y, double *jx, double *jy)
+void fractal_circle(double x, double y, double *jx, double *jy)
 {
   (*jx) = (x - (WIN_WDT / 2.0)) / (WIN_WDT / 2.0);
   (*jy) = (y - (WIN_HGT / 2.0)) / (WIN_HGT / 2.0);
@@ -147,24 +155,31 @@ int    julia_mouse(int key, int x, int y, t_env *env)
   double jx;
   double jy;
 
-  juli_zoom(x, y, &jx, &jy);
-  jx *= env->juli->frametime / env->juli->zoom;
-  jy *= env->juli->frametime / env->juli->zoom;
   // jx -= env->juli->mx;
   // jy -= env->juli->my;
   if (key == 5)
   {
     #include <stdio.h>
-    env->juli->zoom += 1.00001;
-    env->juli->mx += jx; // * env->juli->frametime / env->juli->zoom;
-    env->juli->my += jy; // * env->juli->frametime / env->juli->zoom;
+    env->juli->zoom += 0.001;
+    fractal_circle(x, y, &jx, &jy);
+    jx = jx - env->juli->mx;
+    jy = jy - env->juli->my;
+    jx = (jx * (env->juli->zoom - 1)) + (env->juli->zoom * env->juli->mx);
+    jy = (jy * (env->juli->zoom - 1)) + (env->juli->zoom * env->juli->my);
+    env->juli->mx = jx; // * env->juli->frametime / env->juli->zoom;
+    env->juli->my = jy; // * env->juli->frametime / env->juli->zoom;
+    // env->juli->omx = ;
+    // env->juli->omy =
     printf("mx: %f, my: %f\n\n", env->juli->mx, env->juli->my);
     env->juli->z++;
 
   }
   else if (key == 4 && env->juli->z != 0)
   {
-    env->juli->zoom -= 1.00001;
+    env->juli->zoom -= 0.001;
+    fractal_circle(x, y, &jx, &jy);
+    jx *= (env->juli->zoom - 1);
+    jy *= (env->juli->zoom - 1);
     env->juli->mx -= jx;
     env->juli->my -= jy;
     env->juli->z--;
@@ -177,14 +192,14 @@ int    julia_motion(int x, int y, t_env *env)
   double    jx;
   double    jy;
 
-  juli_zoom(x, y, &jx, &jy);
+  fractal_circle(x, y, &jx, &jy);
   if (env->juli->z == 0)
   {
     env->juli->mx = 0; // * env->juli->frametime / env->juli->zoom;
     env->juli->my = 0; // * env->juli->frametime / env->juli->zoom;
   }
-  env->juli->rec = jx * env->juli->frametime / env->juli->zoom;
-  env->juli->imc = jy * env->juli->frametime / env->juli->zoom;
+  env->juli->rec = jx; // * env->juli->zoom;
+  env->juli->imc = jy; // * env->juli->zoom;
   // env->juli->mx = env->juli->rec * env->juli->frametime / env->juli->zoom;
   // env->juli->my = env->juli->imc * env->juli->frametime / env->juli->zoom;
   return (x+y);
@@ -225,7 +240,6 @@ int   julia_hook(t_env *env)
   return (1);
 }
 
-
 t_env *make_env(char **argv, int fractal)
 {
   t_env   *ret;
@@ -236,8 +250,8 @@ t_env *make_env(char **argv, int fractal)
     ret->tree = make_tree(argv);
   if (fractal == 2)
     ret->juli = make_julia();
-  // if (fractal == 3)
-  //   make_mandel(env);
+  if (fractal == 3)
+    ret->man = make_mandel();
   if (fractal == 4)
     ret->sf = make_snowflake_questionmark();
   return (ret);
@@ -319,13 +333,8 @@ void fractals(int fractal, t_env *env)
     mlx_loop_hook(env->mlx, tree_hook, env);
   if (fractal == 2)
     mlx_loop_hook(env->mlx, julia_hook, env);
-  // if (fractal == 3)
-  // {
-  //
-  //
-  //
-  //
-  // }
+  if (fractal == 3)
+    mlx_loop_hook(env->mlx, howie_mandel, env);
   if (fractal == 4)
     mlx_loop_hook(env->mlx, snowflake_questionmark, env);
   mlx_hook(env->win, 17, 0, exit_hook, env);
