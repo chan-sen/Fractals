@@ -158,21 +158,21 @@ t_tree  **make_trees()
     return (NULL);
   while (t < 8)
   {
-    trees[t] = (t_tree *)malloc(sizeof(t_tree *));
+    trees[t] = (t_tree *)malloc(sizeof(t_tree));
     trees[t]->brs = 2;
-    trees[t]->branch = NULL;
     trees[t]->branch = (t_branch *)malloc(sizeof(t_branch) * trees[t]->brs - 1);
     b = 0;
-    printf("hi: brs= %d", trees[t]->brs);
+    printf("hi: brs= %d\n", trees[t]->brs);
     while (b < trees[t]->brs)
     {
       trees[t]->branch[b].d = trees_d(t);
       trees[t]->branch[b].rad = (((M_PI) / 180) * ((180 / (trees[t]->brs + 1))
         * (b + 1)) + M_PI);
-      // printf("hello\n\n");
       b++;
     }
     trees[t]->max = 1;
+    t++;
   }
+  printf("eh\n");
   return (trees);
 }
