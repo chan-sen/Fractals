@@ -21,6 +21,8 @@
 
 # define  WIN_HGT 1000
 # define  WIN_WDT 1000
+# define	Z_I			14
+# define	Z_O			13.25
 
 typedef struct  s_branch
 {
@@ -85,9 +87,6 @@ typedef struct	s_mandel
 	double				zoom;
 	double				mx;
 	double				my;
-	double				frametime;
-	time_t				oldtime;
-	time_t				time;
 	int						maxi;
 }								t_mandel;
 
@@ -102,14 +101,7 @@ typedef	struct	s_julia
 	double				zoom;
 	double				mx;
 	double				my;
-	// double				omx;
-	// double				omy;
-	double				frametime;
-	time_t				oldtime;
-	time_t				time;
 	int						maxi;
-	int						color;
-	int						z;
 }								t_julia;
 
 typedef struct	s_img
@@ -146,13 +138,15 @@ t_julia *make_julia();
 t_mandel *make_mandel();
 t_sf *make_snowflake_questionmark();
 
-
-
 int tree_keys(int key, t_env *env);
+int julia_keys(int key, t_env *env);
+int mandel_keys(int key, t_env *env);
 
 int tree_mouse(int key, int x, int y, t_env *env);
+int mandel_mouse(int key, int x, int y, t_env *env);
 
-int	howie_mandel(t_env *env);
+int	hookie_mandel(t_env *env);
+int man_iter(t_env *env);
 
 int	julia_hook(t_env *env);
 
@@ -179,6 +173,8 @@ void fractal_circle(double x, double y, double *jx, double *jy);
 
 
 int       fractal_msg();
+
+int     exit_hook(t_env *env);
 
 void set3to0(int *a, int *b, int *c);
 void set4to0(double *a, double *b, double *c, double *d);

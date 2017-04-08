@@ -12,9 +12,6 @@
 
 #include "./../includes/fractol.h"
 
-
-#include <time.h>
-
 #include <stdio.h>
 
 void set3to0(int *a, int *b, int *c)
@@ -32,230 +29,34 @@ void set4to0(double *a, double *b, double *c, double *d)
   *d = 0;
 }
 
-int     check(char **argv)
-{
-  if (ft_strcmp(argv[1], "tree") == 0)
-    return (1);
-  if (ft_strcmp(argv[1], "julia") == 0)
-    return (2);
-  if (ft_strcmp(argv[1], "mandel") == 0)
-    return (3);
-  if (ft_strcmp(argv[1], "snowflake?") == 0)
-    return (4);
-  return (0);
-}
 
-int     exit_hook(t_env *env)
-{
-  env = NULL;
-  exit(0);
-}
 
-int     julia_keys(int keycode, t_env *env)
+int     julia_keys(int key, t_env *env)
 {
-  if (keycode == 53)
+  if (key == 53)
   {
     mlx_destroy_window(env->mlx, env->win);
     exit (0);
   }
-  // if (keycode == 2)
-  //   env->juli->rec += 0.02 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 0)
-  //   env->juli->rec -= 0.02 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 13)
-  //   env->juli->imc += 0.02 * env->juli->frametime / env->juli->zoom;
-  // if (keycode == 1)
-  //   env->juli->imc -= 0.02 * env->juli->frametime / env->juli->zoom;
-  return (keycode);
+  if (key == 0 && env->juli->maxi < 666)
+    env->juli->maxi *= 2;
+  if (key == 1 && env->juli->maxi > 2)
+    env->juli->maxi /= 2;
+  return (key);
 }
 
-int   jcolor1(int i)
-{
-  static int map[64] =
-  {
-    0x0048EF, 0x0057F0, 0x0166f0, 0x0274F0,
-		0x0383F0, 0x0491F0, 0x05A0F1, 0x06AEF1,
-		0x07BCF1, 0x08CAF1, 0x08D8f1, 0x09E6F2,
-		0x0AF2F0, 0x0BF2E3, 0x0CF2D5, 0x0DF2C8,
-		0x0EF3BB, 0x0FF3AE, 0x10F3A1, 0x11F394,
-		0x12F388, 0x13F47B, 0x13F46E, 0x14F462,
-		0x15F455, 0x16F449, 0x17F43D, 0x18F531,
-		0x19F525, 0x1BF51A, 0x29F51B, 0x37F51C,
-		0x44F61D, 0x52F61E, 0x5FF61F, 0x6CF620,
-		0x79F621, 0x87F721, 0x94F722, 0xA1F723,
-		0xADF724, 0xBAF725, 0xC7F826, 0xD4F827,
-		0xE0F828, 0xECF829, 0xF8F82A, 0xF8EC2B,
-		0xF9E02C, 0xF9D42D, 0xF9C92E, 0xF9BD2F,
-		0xF9B230, 0xfAA731, 0xFA9B32, 0xFA9033,
-		0xFA8534, 0xFA7A35, 0xFB6F36, 0xFB6537,
-		0xFB5A38, 0xFB4F39, 0xFB453A, 0xFC3A3A
-  };
 
 
-  return (map[i]);
-}
-
-int     color_juli(int i)
-{
-  if (i <= 64)
-    return (jcolor1(i));
-  if (i >= 65)
-    return (jcolor1(i % 64));
-  return (0xFFFFFF);
-}
-
-t_julia *make_julia()
-{
-  t_julia   *julia;
-
-  if (!(julia = (t_julia *)ft_memalloc(sizeof(t_julia))))
-    return (NULL);
-  julia->rec = 0;
-  julia->imc = 0;
-  julia->zoom = 1;
-  julia->z = 0;
-  julia->mx = 0;
-  julia->my = 0;
-  julia->maxi = 300;
-  julia->time = time(NULL);
-  julia->oldtime = 0;
-  julia->frametime = 0;
-  return (julia);
-}
-
-int julia_iterate(t_env *env)
-{
-  int     i;
-
-  i = 0;
-  while (i < env->juli->maxi)
-  {
-    env->juli->oldre = env->juli->newre;
-    env->juli->oldim = env->juli->newim;
-    env->juli->newre = env->juli->oldre * env->juli->oldre
-      - env->juli->oldim * env->juli->oldim + env->juli->rec;
-    env->juli->newim = 2.0 * env->juli->oldre * env->juli->oldim
-      + env->juli->imc;
-    if ((env->juli->newre * env->juli->newre
-      + env->juli->newim * env->juli->newim) > 4)
-      return (i);
-    i++;
-  }
-  return (i);
-}
 
 void fractal_circle(double x, double y, double *jx, double *jy)
 {
-  (*jx) = (x - (WIN_WDT / 2.0)) / (WIN_WDT / 2.0);
-  (*jy) = (y - (WIN_HGT / 2.0)) / (WIN_HGT / 2.0);
-}
-
-int    julia_mouse(int key, int x, int y, t_env *env)
-{
-  double jx;
-  double jy;
-
-  // jx -= env->juli->mx;
-  // jy -= env->juli->my;
-  if (key == 5)
-  {
-    #include <stdio.h>
-    env->juli->zoom += 0.001;
-    fractal_circle(x, y, &jx, &jy);
-    jx = jx - env->juli->mx;
-    jy = jy - env->juli->my;
-    jx = (jx * (env->juli->zoom - 1)) + (env->juli->zoom * env->juli->mx);
-    jy = (jy * (env->juli->zoom - 1)) + (env->juli->zoom * env->juli->my);
-    env->juli->mx = jx; // * env->juli->frametime / env->juli->zoom;
-    env->juli->my = jy; // * env->juli->frametime / env->juli->zoom;
-    // env->juli->omx = ;
-    // env->juli->omy =
-    printf("mx: %f, my: %f\n\n", env->juli->mx, env->juli->my);
-    env->juli->z++;
-
-  }
-  else if (key == 4 && env->juli->z != 0)
-  {
-    env->juli->zoom -= 0.001;
-    fractal_circle(x, y, &jx, &jy);
-    jx *= (env->juli->zoom - 1);
-    jy *= (env->juli->zoom - 1);
-    env->juli->mx -= jx;
-    env->juli->my -= jy;
-    env->juli->z--;
-  }
-  return (key + x + y);
-}
-
-int    julia_motion(int x, int y, t_env *env)
-{
-  double    jx;
-  double    jy;
-
-  fractal_circle(x, y, &jx, &jy);
-  if (env->juli->z == 0)
-  {
-    env->juli->mx = 0; // * env->juli->frametime / env->juli->zoom;
-    env->juli->my = 0; // * env->juli->frametime / env->juli->zoom;
-  }
-  env->juli->rec = jx; // * env->juli->zoom;
-  env->juli->imc = jy; // * env->juli->zoom;
-  // env->juli->mx = env->juli->rec * env->juli->frametime / env->juli->zoom;
-  // env->juli->my = env->juli->imc * env->juli->frametime / env->juli->zoom;
-  return (x+y);
+  (*jx) = (x - WIN_WDT / 2.0) / (WIN_WDT / 2.0);
+  (*jy) = (y - WIN_HGT / 2.0) / (WIN_HGT / 2.0);
 }
 
 
-int   julia_hook(t_env *env)
-{
-  int     i;
-  int     x;
-  int     y;
 
-  set3to0(&i, &x, &y);
-  env->image = make_img(env->mlx);
-  while (y < WIN_HGT)
-  {
-    x = 0;
-    while (x < WIN_WDT)
-    {
-      i = 0;
-      env->juli->newre = 1.5 * (x - WIN_WDT / 2.0)
-        / (0.5 * env->juli->zoom * WIN_WDT) + env->juli->mx;
-      env->juli->newim = (y - WIN_HGT / 2.0)
-        / (0.5 * env->juli->zoom * WIN_HGT) + env->juli->my;
-      env->juli->color = color_juli(julia_iterate(env));
-      put_image_pixel(env->image, x, y, env->juli->color);
-      x++;
-    }
-    y++;
-  }
-  mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
-  env->juli->oldtime = env->juli->time;
-  env->juli->time = time(NULL);
-  env->juli->frametime = difftime(env->juli->time, env->juli->oldtime);
-  mlx_hook(env->win, 6, 0, julia_motion, env);
-  mlx_mouse_hook(env->win, julia_mouse, env);
-  mlx_hook(env->win, 2, 0, julia_keys, env);
-  return (1);
-}
 
-t_env *make_env(char **argv, int fractal)
-{
-  t_env   *ret;
-
-  if (!(ret = (t_env *)malloc(sizeof(t_env))))
-    return (NULL);
-  if (fractal == 1)
-    ret->tree = make_tree(argv);
-  if (fractal == 2)
-    ret->juli = make_julia();
-  if (fractal == 3)
-    ret->man = make_mandel();
-  if (fractal == 4)
-    ret->sf = make_snowflake_questionmark();
-  return (ret);
-}
 
 int tree_mouse(int key, int x, int y, t_env *env)
 {
@@ -291,23 +92,6 @@ int tree_keys(int key, t_env *env)
   return (key);
 }
 
-
-
-
-t_img   make_img(void *mlx)
-{
-  t_img   image;
-
-  image.img = mlx_new_image(mlx, WIN_WDT, WIN_HGT);
-  image.data = mlx_get_data_addr(image.img, &image.bits,
-    &image.sizeline, &image.endian);
-  image.height = WIN_HGT;
-  image.width = WIN_WDT;
-  return (image);
-}
-
-
-
 int reset_tree(t_env *env)
 {
   int   j;
@@ -327,16 +111,19 @@ void fractals(int fractal, t_env *env)
   if (!(env->mlx = mlx_init()))
     exit (0);
   env->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT, "Fract'ol4sher");
-
-
+  env->image = make_img(env->mlx);
   if (fractal == 1)
     mlx_loop_hook(env->mlx, tree_hook, env);
   if (fractal == 2)
     mlx_loop_hook(env->mlx, julia_hook, env);
   if (fractal == 3)
-    mlx_loop_hook(env->mlx, howie_mandel, env);
+    mlx_loop_hook(env->mlx, hookie_mandel, env);
   if (fractal == 4)
     mlx_loop_hook(env->mlx, snowflake_questionmark, env);
+  if (fractal == 5)
+    mlx_loop_hook(env->mlx, trees_hook, env);
+  // if (fractal == 6)
+  //   mlx_loop_hook(env->mlx, );
   mlx_hook(env->win, 17, 0, exit_hook, env);
   mlx_loop(env->mlx);
 }

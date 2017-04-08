@@ -12,8 +12,6 @@
 
 #include "./../includes/fractol.h"
 
-#include <stdio.h>
-
 void freezer(t_env *env, t_line line)
 {
   line.dx = abs(line.x2 - line.x1);

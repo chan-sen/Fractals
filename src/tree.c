@@ -12,22 +12,18 @@
 
 #include "./../includes/fractol.h"
 
-t_point pointb(t_env *env, t_point a, int j) // j for branch # (angle and dist) && br to find length of particular line relative to d
+t_point pointb(t_env *env, t_point a, int j)
 {
   t_point   b;
   float     x;
   float     y;
 
-
   x = (a.r * cos(a.rad));
   y = (a.r * sin(a.rad));
-
   b.x = x + a.x;
   b.y = y + a.y;
-
-  b.r = a.r * 0.75;
+  b.r = a.r * 0.66;
   b.rad = (a.rad + (M_PI / 2)) + env->tree->branch[j].rad;
-
   return (b);
 }
 
@@ -71,7 +67,6 @@ int tree_hook(t_env *env)
   int    i;
 
   i = 0;
-
   env->image = make_img(env->mlx);
   mlx_mouse_hook(env->win, tree_mouse, env);
   mlx_hook(env->win, 2, 0, tree_keys, env);
@@ -106,7 +101,6 @@ t_tree *make_tree(char **argv)
     tree->branch[b].rad = (((M_PI) / 180) * ((180 / (tree->brs + 1)) * (b + 1)) + M_PI);
     b++;
   }
-  tree->len = 100;
   tree->max = 1;
   return (tree);
 }
