@@ -22,6 +22,8 @@ int     check(char **argv)
     return (3);
   if (ft_strcmp(argv[1], "snowflake?") == 0)
     return (4);
+  if (ft_strcmp(argv[1], "trees") == 0)
+    return (5);
   return (0);
 }
 

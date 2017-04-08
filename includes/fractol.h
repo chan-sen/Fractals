@@ -121,6 +121,7 @@ typedef struct  s_env
 	void 					*win;
 	t_img					image;
 	t_tree				*tree;
+	t_tree				**trees;
 	t_julia				*juli;
 	t_mandel			*man;
 	t_sf					*sf;
@@ -137,6 +138,7 @@ t_tree *make_tree(char **argv);
 t_julia *make_julia();
 t_mandel *make_mandel();
 t_sf *make_snowflake_questionmark();
+t_tree  **make_trees();
 
 int tree_keys(int key, t_env *env);
 int julia_keys(int key, t_env *env);
@@ -149,6 +151,7 @@ int	hookie_mandel(t_env *env);
 int man_iter(t_env *env);
 
 int	julia_hook(t_env *env);
+
 
 int tree_hook(t_env *env);
 void tree_trunks_apple_pie(t_env *env);
@@ -164,6 +167,10 @@ t_point  center_sf(t_env *env, int i);
 t_point bpoint(t_env *env, t_point a, int j, int br);
 void freeze(t_env *env, t_point a, int br);
 void freezer(t_env *env, t_line line);
+
+int  trees_hook(t_env *env);
+int    trees_d(int t);
+
 
 void put_image_pixel(t_img image, int x, int y, int color);
 

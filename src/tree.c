@@ -55,7 +55,7 @@ void tree_trunks_apple_pie(t_env *env)
 
   x = (WIN_WDT / 2);
   y = (WIN_HGT / 2) + 200;
-  while (y > (WIN_HGT / 2) + 50)
+  while (y > (WIN_HGT / 2) + 75)
   {
     put_image_pixel(env->image, x, y, 0x00FF00);
     y--;
