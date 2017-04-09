@@ -12,19 +12,26 @@
 
 #include "./../includes/fractol.h"
 
-int     check(char **argv)
+t_frac     check(char **argv)
 {
+  t_frac    fractal;
+  int       f;
+
+  f = 1;
   if (ft_strcmp(argv[1], "tree") == 0)
-    return (1);
+    fractal.a = f++;
   if (ft_strcmp(argv[1], "julia") == 0)
-    return (2);
+    fractal.b = f++;
   if (ft_strcmp(argv[1], "mandel") == 0)
-    return (3);
+    fractal.c = f++;
   if (ft_strcmp(argv[1], "snowflake?") == 0)
-    return (4);
+    fractal.d = f++;
   if (ft_strcmp(argv[1], "trees") == 0)
-    return (5);
-  return (0);
+    fractal.e = f++;
+  (fractal.a < 1 && fractal.b < 1 && fractal.c < 1
+    && fractal.d < 1 && fractal.e < 1 && fractal.f < 1) ? (fractal.err = 0) :
+      (fractal.err = 1);
+  return (fractal);
 }
 
 int       fractal_msg()
@@ -43,7 +50,7 @@ t_point  center_tree(t_env *env, int i)
   t_point   origin;
 
   origin.x = (WIN_WDT / 2);
-  origin.y = (WIN_HGT / 2) + 50;
+  origin.y = (WIN_HGT / 2) - 75;
   origin.rad = env->tree->branch[i].rad;
   origin.r = env->tree->branch[i].d;
   return (origin);

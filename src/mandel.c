@@ -36,7 +36,7 @@ int mandel_keys(int key, t_env *env)
 {
   if (key == 53)
   {
-    mlx_destroy_window(env->mlx, env->win);
+    mlx_destroy_window(env->mlx, env->man->win);
     exit(0);
   }
   if (key == 0)
@@ -89,14 +89,14 @@ int       hookie_mandel(t_env *env)
         / (0.5 * env->man->zoom * WIN_HGT) + env->man->my;
       set4to0(&env->man->oldre, &env->man->oldim,
         &env->man->newre, &env->man->newim);
-      put_image_pixel(env->image, x, y, color_juli(man_iter(env)));
+      put_image_pixel(env->man->image, x, y, color_juli(man_iter(env)));
       x++;
     }
     y++;
   }
-  mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
-  mlx_mouse_hook(env->win, mandel_mouse, env);
-  mlx_hook(env->win, 2, 0, mandel_keys, env);
+  mlx_put_image_to_window(env->mlx, env->man->win, env->man->image.img, 0, 0);
+  mlx_mouse_hook(env->man->win, mandel_mouse, env);
+  mlx_hook(env->man->win, 2, 0, mandel_keys, env);
   return (1);
 }
 

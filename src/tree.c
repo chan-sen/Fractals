@@ -54,10 +54,10 @@ void tree_trunks_apple_pie(t_env *env)
   int     y;
 
   x = (WIN_WDT / 2);
-  y = (WIN_HGT / 2) + 200;
-  while (y > (WIN_HGT / 2) + 75)
+  y = (WIN_HGT / 2) + 75;
+  while (y > (WIN_HGT / 2) - 75)
   {
-    put_image_pixel(env->image, x, y, 0x00FF00);
+    put_image_pixel(env->tree->image, x, y, 0x00FF00);
     y--;
   }
 }
@@ -67,17 +67,17 @@ int tree_hook(t_env *env)
   int    i;
 
   i = 0;
-  env->image = make_img(env->mlx);
-  mlx_mouse_hook(env->win, tree_mouse, env);
-  mlx_hook(env->win, 2, 0, tree_keys, env);
-  mlx_expose_hook(env->win, reset_tree, env);
+  env->tree->image = make_img(env->mlx);
+  mlx_mouse_hook(env->tree->win, tree_mouse, env);
+  mlx_hook(env->tree->win, 2, 0, tree_keys, env);
+  mlx_expose_hook(env->tree->win, reset_tree, env);
   tree_trunks_apple_pie(env);
   while (i < env->tree->brs)
   {
     branch(env, center_tree(env, i), 0);
     i++;
   }
-  mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
+  mlx_put_image_to_window(env->mlx, env->tree->win, env->tree->image.img, 0, 0);
   return (1);
 }
 

@@ -21,7 +21,7 @@ void freezer(t_env *env, t_line line)
   line.e = (line.dx > line.dy ? line.dx : -(line.dy)) / 2;
   while (!(line.x1 == line.x2 && line.y1 == line.y2))
   {
-    put_image_pixel(env->image, line.x1, line.y1, 0xDDFFFF);
+    put_image_pixel(env->sf->image, line.x1, line.y1, 0xDDFFFF);
     line.etmp = line.e;
     if (line.etmp > -(line.dx))
     {
@@ -34,7 +34,7 @@ void freezer(t_env *env, t_line line)
       line.y1 += line.yi;
     }
   }
-  put_image_pixel(env->image, line.x1, line.y1, 0xDDFFFF);
+  put_image_pixel(env->sf->image, line.x1, line.y1, 0xDDFFFF);
 }
 
 t_point bpoint(t_env *env, t_point a, int j, int br)
@@ -80,14 +80,14 @@ int snowflake_questionmark(t_env *env)
     int    i;
 
     i = 0;
-    env->image = make_img(env->mlx);
-    mlx_key_hook(env->win, tree_keys, env);
+    env->sf->image = make_img(env->mlx);
+    mlx_key_hook(env->sf->win, tree_keys, env);
     while (i < env->sf->brs)
     {
       freeze(env, center_sf(env, i), 0);
       i++;
     }
-    mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
+    mlx_put_image_to_window(env->mlx, env->sf->win, env->sf->image.img, 0, 0);
     return (1);
 }
 

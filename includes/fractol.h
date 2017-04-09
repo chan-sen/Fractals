@@ -53,6 +53,16 @@ typedef struct	s_line
 	int						etmp;
 }								t_line;
 
+typedef struct	s_img
+{
+	void 					*img;
+	char					*data;
+	int						height;
+	int						width;
+	int						sizeline;
+	int						bits;
+	int						endian;
+}								t_img;
 
 typedef struct	s_sf
 {
@@ -63,6 +73,8 @@ typedef struct	s_sf
   int           len;
   int           brs;
 	int						max;
+	void					*win;
+	t_img					image;
 }								t_sf;
 
 typedef struct	s_tree
@@ -74,6 +86,8 @@ typedef struct	s_tree
   int           len;
   int           brs;
 	int						max;
+	void					*win;
+	t_img					image;
 }								t_tree;
 
 typedef struct	s_mandel
@@ -88,6 +102,8 @@ typedef struct	s_mandel
 	double				mx;
 	double				my;
 	int						maxi;
+	void					*win;
+	t_img					image;
 }								t_mandel;
 
 typedef	struct	s_julia
@@ -102,43 +118,42 @@ typedef	struct	s_julia
 	double				mx;
 	double				my;
 	int						maxi;
+	void					*win;
+	t_img					image;
 }								t_julia;
 
-typedef struct	s_img
+typedef struct	s_frac
 {
-	void 					*img;
-	char					*data;
-	int						height;
-	int						width;
-	int						sizeline;
-	int						bits;
-	int						endian;
-}								t_img;
+	int						a;
+	int						b;
+	int						c;
+	int						d;
+	int						e;
+	int						f;
+	int						err;
+}								t_frac;
 
 typedef struct  s_env
 {
 	void 					*mlx;
-	void 					*win;
-	t_img					image;
 	t_tree				*tree;
-	t_tree				**trees;
 	t_julia				*juli;
 	t_mandel			*man;
 	t_sf					*sf;
 }               t_env;
 
 
-void fractals(int fractal, t_env *env);
-int     check(char **argv);
+void fractals(t_frac fractal, t_env *env);
+t_frac     check(char **argv);
 
 
-t_env *make_env(char **argv, int fractal);
+t_env *make_env(char **argv, t_frac fractal);
 t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
 t_julia *make_julia();
 t_mandel *make_mandel();
 t_sf *make_snowflake_questionmark();
-t_tree  **make_trees();
+// t_tree  *make_trees();
 
 int tree_keys(int key, t_env *env);
 int julia_keys(int key, t_env *env);

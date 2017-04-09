@@ -12,8 +12,6 @@
 
 #include "./../includes/fractol.h"
 
-#include <stdio.h>
-
 void set3to0(int *a, int *b, int *c)
 {
   *a = 0;
@@ -29,13 +27,11 @@ void set4to0(double *a, double *b, double *c, double *d)
   *d = 0;
 }
 
-
-
 int     julia_keys(int key, t_env *env)
 {
   if (key == 53)
   {
-    mlx_destroy_window(env->mlx, env->win);
+    mlx_destroy_window(env->mlx, env->juli->win);
     exit (0);
   }
   if (key == 0 && env->juli->maxi < 666)
@@ -44,19 +40,6 @@ int     julia_keys(int key, t_env *env)
     env->juli->maxi /= 2;
   return (key);
 }
-
-
-
-
-void fractal_circle(double x, double y, double *jx, double *jy)
-{
-  (*jx) = (x - WIN_WDT / 2.0) / (WIN_WDT / 2.0);
-  (*jy) = (y - WIN_HGT / 2.0) / (WIN_HGT / 2.0);
-}
-
-
-
-
 
 int tree_mouse(int key, int x, int y, t_env *env)
 {
@@ -74,7 +57,7 @@ int tree_keys(int key, t_env *env)
 {
   if (key == 53)
   {
-    mlx_destroy_window(env->mlx, env->win);
+    mlx_destroy_window(env->mlx, env->tree->win);
     exit(0);
   }
   if (key == 0 && env->tree->b > 0)
@@ -92,51 +75,88 @@ int tree_keys(int key, t_env *env)
   return (key);
 }
 
-int reset_tree(t_env *env)
+void fractal_window(t_frac fractal, t_env *env)
 {
-  int   j;
-
-  j = 0;
-  while (j < env->tree->brs)
-  {
-    env->tree->branch[j].rad = (((M_PI) / 180) *
-      ((180 / (env->tree->brs + 1)) * (j + 1)) + M_PI);
-    j++;
-  }
-  return (1);
+  if (fractal.a == 1)
+    env->tree->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
+      "chansen ~ fractol ~ tree");
+  if (fractal.b == 1)
+    env->juli->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
+      "chansen ~ fractol ~ julia");
+  if (fractal.c == 1)
+    env->man->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
+      "chansen ~ fractol ~ mandelbrot");
+  if (fractal.d == 1)
+    env->sf->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
+      "chansen ~ fractol ~ snowflake?");
+  if (fractal.e == 1)
+    env->tree->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
+      "chansen ~ fractol ~ trees");
 }
 
-void fractals(int fractal, t_env *env)
+// void fractal_image(t_frac fractal, t_env *env)
+// {
+//
+//   if (fractal.a == 1)
+//     env->tree->image = make_img(env->mlx);
+//   if (fractal.b == 1)
+//     env->juli->image = make_img(env->mlx);
+//   if (fractal.c == 1)
+//     env->man->image = make_img(env->mlx);
+//   if (fractal.d == 1)
+//     env->sf->image = make_img(env->mlx);
+//   if (fractal.e == 1)
+//     env->tree->image = make_img(env->mlx);
+// }
+
+void fractals(t_frac fractal, t_env *env)
 {
   if (!(env->mlx = mlx_init()))
     exit (0);
-  env->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT, "Fract'ol4sher");
-  env->image = make_img(env->mlx);
-  if (fractal == 1)
+  fractal_window(fractal, env);
+  // fractal_image(fractal, env);
+  if (fractal.a == 1)
     mlx_loop_hook(env->mlx, tree_hook, env);
-  if (fractal == 2)
+  if (fractal.b == 1)
     mlx_loop_hook(env->mlx, julia_hook, env);
-  if (fractal == 3)
+  if (fractal.c == 1)
     mlx_loop_hook(env->mlx, hookie_mandel, env);
-  if (fractal == 4)
+  if (fractal.d == 1)
     mlx_loop_hook(env->mlx, snowflake_questionmark, env);
-  if (fractal == 5)
+  if (fractal.e == 1)
     mlx_loop_hook(env->mlx, trees_hook, env);
-  // if (fractal == 6)
-  //   mlx_loop_hook(env->mlx, );
-  mlx_hook(env->win, 17, 0, exit_hook, env);
+  mlx_hook(env->tree->win, 17, 0, exit_hook, env);
+  mlx_hook(env->juli->win, 17, 0, exit_hook, env);
+  mlx_hook(env->man->win, 17, 0, exit_hook, env);
+  mlx_hook(env->sf->win, 17, 0, exit_hook, env);
   mlx_loop(env->mlx);
 }
 
+t_frac  frac()
+{
+  t_frac    fractal;
+
+  fractal.a = 0;
+  fractal.b = 0;
+  fractal.c = 0;
+  fractal.d = 0;
+  fractal.e = 0;
+  return (fractal);
+}
+
+#include <stdio.h>
+
+
 int     main(int argc, char **argv)
 {
-  int     fractal;
+  t_frac    fractal;
   t_env   *env;
 
+  fractal = frac();
   if (argc < 2 || argc > 4)
     return (fractal_msg());
   fractal = check(argv);
-  if (fractal == 0)
+  if (fractal.err == 0)
     return (fractal_msg());
   env = make_env(argv, fractal);
   fractals(fractal, env);

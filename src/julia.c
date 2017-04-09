@@ -86,15 +86,15 @@ int   julia_hook(t_env *env)
         / (0.5 * env->juli->zoom * WIN_WDT) + env->juli->mx;
       env->juli->newim = 1.5 * (y - WIN_HGT / 2.0)
         / (0.5 * env->juli->zoom * WIN_HGT) + env->juli->my;
-      put_image_pixel(env->image, x, y, color_juli(julia_iterate(env)));
+      put_image_pixel(env->juli->image, x, y, color_juli(julia_iterate(env)));
       x++;
     }
     y++;
   }
-  mlx_put_image_to_window(env->mlx, env->win, env->image.img, 0, 0);
-  mlx_hook(env->win, 6, 0, julia_motion, env);
-  mlx_mouse_hook(env->win, julia_mouse, env);
-  mlx_hook(env->win, 2, 0, julia_keys, env);
+  mlx_put_image_to_window(env->mlx, env->juli->win, env->juli->image.img, 0, 0);
+  mlx_hook(env->juli->win, 6, 0, julia_motion, env);
+  mlx_mouse_hook(env->juli->win, julia_mouse, env);
+  mlx_hook(env->juli->win, 2, 0, julia_keys, env);
   return (1);
 }
 

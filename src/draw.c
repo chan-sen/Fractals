@@ -47,7 +47,7 @@ void draw_branch(t_env *env, t_line line)
   line.e = (line.dx > line.dy ? line.dx : -(line.dy)) / 2;
   while (!(line.x1 == line.x2 && line.y1 == line.y2))
   {
-    put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
+    put_image_pixel(env->tree->image, line.x1, line.y1, 0x00FF00);
     line.etmp = line.e;
     if (line.etmp > -(line.dx))
     {
@@ -60,7 +60,7 @@ void draw_branch(t_env *env, t_line line)
       line.y1 += line.yi;
     }
   }
-  put_image_pixel(env->image, line.x1, line.y1, 0x00FF00);
+  put_image_pixel(env->tree->image, line.x1, line.y1, 0x00FF00);
 }
 
 int   jcolor1(int i)

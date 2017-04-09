@@ -24,21 +24,41 @@ t_img   make_img(void *mlx)
   return (image);
 }
 
-t_env *make_env(char **argv, int fractal)
+t_env *make_env(char **argv, t_frac fractal)
 {
   t_env   *ret;
 
   if (!(ret = (t_env *)malloc(sizeof(t_env))))
     return (NULL);
-  if (fractal == 1)
+  if (fractal.a == 1)
     ret->tree = make_tree(argv);
-  if (fractal == 2)
+  if (fractal.b == 1)
     ret->juli = make_julia();
-  if (fractal == 3)
+  if (fractal.c == 1)
     ret->man = make_mandel();
-  if (fractal == 4)
+  if (fractal.d == 1)
     ret->sf = make_snowflake_questionmark();
-  if (fractal == 5)
-    ret->trees = make_trees();
+  if (fractal.e == 1)
+    ret->tree = make_tree(argv);
   return (ret);
+}
+
+int reset_tree(t_env *env)
+{
+  int   j;
+
+  j = 0;
+  while (j < env->tree->brs)
+  {
+    env->tree->branch[j].rad = (((M_PI) / 180) *
+      ((180 / (env->tree->brs + 1)) * (j + 1)) + M_PI);
+    j++;
+  }
+  return (1);
+}
+
+void fractal_circle(double x, double y, double *jx, double *jy)
+{
+  (*jx) = (x - WIN_WDT / 2.0) / (WIN_WDT / 2.0);
+  (*jy) = (y - WIN_HGT / 2.0) / (WIN_HGT / 2.0);
 }
