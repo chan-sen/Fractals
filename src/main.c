@@ -75,21 +75,21 @@ int tree_keys(int key, t_env *env)
   return (key);
 }
 
-void fractal_window(t_frac fractal, t_env *env)
+void fractal_window(t_frac *fractal, t_env *env)
 {
-  if (fractal.a == 1)
+  if (fractal->a == 1)
     env->tree->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
       "chansen ~ fractol ~ tree");
-  if (fractal.b == 1)
+  if (fractal->b == 1)
     env->juli->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
       "chansen ~ fractol ~ julia");
-  if (fractal.c == 1)
+  if (fractal->c == 1)
     env->man->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
       "chansen ~ fractol ~ mandelbrot");
-  if (fractal.d == 1)
+  if (fractal->d == 1)
     env->sf->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
       "chansen ~ fractol ~ snowflake?");
-  if (fractal.e == 1)
+  if (fractal->e == 1)
     env->tree->win = mlx_new_window(env->mlx, WIN_WDT, WIN_HGT,
       "chansen ~ fractol ~ trees");
 }
@@ -109,21 +109,21 @@ void fractal_window(t_frac fractal, t_env *env)
 //     env->tree->image = make_img(env->mlx);
 // }
 
-void fractals(t_frac fractal, t_env *env)
+void fractals(t_frac *fractal, t_env *env)
 {
   if (!(env->mlx = mlx_init()))
     exit (0);
   fractal_window(fractal, env);
   // fractal_image(fractal, env);
-  if (fractal.a == 1)
+  if (fractal->a == 1)
     mlx_loop_hook(env->mlx, tree_hook, env);
-  if (fractal.b == 1)
+  if (fractal->b == 1)
     mlx_loop_hook(env->mlx, julia_hook, env);
-  if (fractal.c == 1)
+  if (fractal->c == 1)
     mlx_loop_hook(env->mlx, hookie_mandel, env);
-  if (fractal.d == 1)
+  if (fractal->d == 1)
     mlx_loop_hook(env->mlx, snowflake_questionmark, env);
-  if (fractal.e == 1)
+  if (fractal->e == 1)
     mlx_loop_hook(env->mlx, trees_hook, env);
   mlx_hook(env->tree->win, 17, 0, exit_hook, env);
   mlx_hook(env->juli->win, 17, 0, exit_hook, env);
@@ -132,15 +132,17 @@ void fractals(t_frac fractal, t_env *env)
   mlx_loop(env->mlx);
 }
 
-t_frac  frac()
+t_frac  *frac()
 {
-  t_frac    fractal;
+  t_frac    *fractal;
 
-  fractal.a = 0;
-  fractal.b = 0;
-  fractal.c = 0;
-  fractal.d = 0;
-  fractal.e = 0;
+  fractal = (t_frac *)malloc(sizeof(t_frac));
+  fractal->a = 0;
+  fractal->b = 0;
+  fractal->c = 0;
+  fractal->d = 0;
+  fractal->e = 0;
+  fractal->err = 0;
   return (fractal);
 }
 
@@ -149,14 +151,14 @@ t_frac  frac()
 
 int     main(int argc, char **argv)
 {
-  t_frac    fractal;
-  t_env   *env;
+  t_frac    *fractal;
+  t_env     *env;
 
   fractal = frac();
   if (argc < 2 || argc > 4)
     return (fractal_msg());
-  fractal = check(argv);
-  if (fractal.err == 0)
+  check(argc, argv, fractal);
+  if (fractal->err == 0)
     return (fractal_msg());
   env = make_env(argv, fractal);
   fractals(fractal, env);

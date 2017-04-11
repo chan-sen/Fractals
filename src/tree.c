@@ -12,6 +12,8 @@
 
 #include "./../includes/fractol.h"
 
+#include <stdio.h>
+
 t_point pointb(t_env *env, t_point a, int j)
 {
   t_point   b;
@@ -81,12 +83,15 @@ int tree_hook(t_env *env)
   return (1);
 }
 
+
+
 t_tree *make_tree(char **argv)
 {
   t_tree   *tree;
   int     b;
 
   b = 0;
+  printf("hi\n\n");
   if (!(tree = (t_tree*)ft_memalloc(sizeof(t_tree))))
     return (NULL);
   if (argv[2] != NULL)

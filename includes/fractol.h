@@ -143,11 +143,11 @@ typedef struct  s_env
 }               t_env;
 
 
-void fractals(t_frac fractal, t_env *env);
-t_frac     check(char **argv);
+void fractals(t_frac *fractal, t_env *env);
+void     check(int argc, char **argv, t_frac *fractal);
+t_frac		*frac();
 
-
-t_env *make_env(char **argv, t_frac fractal);
+t_env *make_env(char **argv, t_frac *fractal);
 t_img   make_img(void *mlx);
 t_tree *make_tree(char **argv);
 t_julia *make_julia();

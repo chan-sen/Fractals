@@ -12,6 +12,8 @@
 
 #include "./../includes/fractol.h"
 
+#include <stdio.h>
+
 t_img   make_img(void *mlx)
 {
   t_img   image;
@@ -24,21 +26,23 @@ t_img   make_img(void *mlx)
   return (image);
 }
 
-t_env *make_env(char **argv, t_frac fractal)
+t_env *make_env(char **argv, t_frac *fractal)
 {
   t_env   *ret;
 
   if (!(ret = (t_env *)malloc(sizeof(t_env))))
     return (NULL);
-  if (fractal.a == 1)
+
+  printf("hihihihihi\n\n");
+  if (fractal->a == 1)
     ret->tree = make_tree(argv);
-  if (fractal.b == 1)
+  if (fractal->b == 1)
     ret->juli = make_julia();
-  if (fractal.c == 1)
+  if (fractal->c == 1)
     ret->man = make_mandel();
-  if (fractal.d == 1)
+  if (fractal->d == 1)
     ret->sf = make_snowflake_questionmark();
-  if (fractal.e == 1)
+  if (fractal->e == 1)
     ret->tree = make_tree(argv);
   return (ret);
 }
