@@ -21,30 +21,24 @@ void     check(int argc, char **argv, t_frac *fractal)
   f = 1;
   while (f < argc)
   {
-    if (f < argc && ft_strcmp(argv[f], "tree") == 0)
+    if (f < argc && ft_strncmp(ft_strdup(argv[f]), "tree", 4) == 0)
       fractal->a = f++;
-    if (f < argc && ft_strcmp(argv[f], "julia") == 0)
+    if (f < argc && ft_strncmp(ft_strdup(argv[f]), "julia", 5) == 0)
       fractal->b = f++;
-    if (f < argc && ft_strcmp(argv[f], "mandel") == 0)
+    if (f < argc && ft_strncmp(ft_strdup(argv[f]), "mandel", 6) == 0)
       fractal->c = f++;
-    if (f < argc && ft_strcmp(argv[f], "snowflake?") == 0)
+    if (f < argc && ft_strncmp(ft_strdup(argv[f]), "snowflake?", 10) == 0)
       fractal->d = f++;
-    if (f < argc && ft_strcmp(argv[f], "trees") == 0)
+    if (f < argc && ft_strncmp(ft_strdup(argv[f]), "trees", 5) == 0)
       fractal->e = f++;
     f++;
   }
   (fractal->a < 1 && fractal->b < 1 && fractal->c < 1
     && fractal->d < 1 && fractal->e < 1 && fractal->f < 1) ? (fractal->err = 0)
     : (fractal->err = 1);
-  printf("HELLO: %d\n", fractal->err);
-  printf("HELLO\n");
   if ((ft_strcmp(argv[1], "tree") == 0 && ft_strcmp(argv[2], "trees") == 0)
     || (ft_strcmp(argv[1], "trees") == 0 && ft_strcmp(argv[2], "tree") == 0))
-  {
-    printf("hi\n");
     fractal->err = 0;
-  }
-  printf("HELLO\n");
 }
 
 int       fractal_msg()

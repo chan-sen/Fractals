@@ -69,6 +69,8 @@ int julia_iterate(t_env *env)
   return (i);
 }
 
+#include <stdio.h>
+
 int   julia_hook(t_env *env)
 {
   int     i;
@@ -76,6 +78,8 @@ int   julia_hook(t_env *env)
   int     y;
 
   set3to0(&i, &x, &y);
+  env->juli->image = make_img(env->mlx);
+  printf("HELLO: %d, %f\n\n\n\n\n", env->juli->maxi, env->juli->rec);
   while (y < WIN_HGT)
   {
     x = 0;
@@ -91,10 +95,10 @@ int   julia_hook(t_env *env)
     }
     y++;
   }
-  mlx_put_image_to_window(env->mlx, env->juli->win, env->juli->image.img, 0, 0);
-  mlx_hook(env->juli->win, 6, 0, julia_motion, env);
-  mlx_mouse_hook(env->juli->win, julia_mouse, env);
-  mlx_hook(env->juli->win, 2, 0, julia_keys, env);
+  mlx_put_image_to_window(env->mlx, env->win, env->juli->image.img, 0, 0);
+  mlx_hook(env->win, 6, 0, julia_motion, env);
+  mlx_mouse_hook(env->win, julia_mouse, env);
+  mlx_hook(env->win, 2, 0, julia_keys, env);
   return (1);
 }
 
@@ -102,10 +106,14 @@ t_julia *make_julia()
 {
   t_julia   *julia;
 
-  if (!(julia = (t_julia *)ft_memalloc(sizeof(t_julia))))
+  if (!(julia = (t_julia *)malloc(sizeof(t_julia))))
     return (NULL);
   julia->rec = 0;
   julia->imc = 0;
+  julia->oldre = 0;
+  julia->oldim = 0;
+  julia->newre = 0;
+  julia->newim = 0;
   julia->zoom = 1;
   julia->mx = 0;
   julia->my = 0;

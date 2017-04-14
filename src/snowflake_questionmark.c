@@ -81,13 +81,13 @@ int snowflake_questionmark(t_env *env)
 
     i = 0;
     env->sf->image = make_img(env->mlx);
-    mlx_key_hook(env->sf->win, tree_keys, env);
+    mlx_key_hook(env->win, tree_keys, env);
     while (i < env->sf->brs)
     {
       freeze(env, center_sf(env, i), 0);
       i++;
     }
-    mlx_put_image_to_window(env->mlx, env->sf->win, env->sf->image.img, 0, 0);
+    mlx_put_image_to_window(env->mlx, env->win, env->sf->image.img, 0, 0);
     return (1);
 }
 
@@ -97,11 +97,11 @@ t_sf *make_snowflake_questionmark()
   int     b;
 
   b = 0;
-  if (!(sf = (t_sf*)ft_memalloc(sizeof(t_sf))))
+  if (!(sf = (t_sf*)malloc(sizeof(t_sf))))
     return (NULL);
   sf->brs = 5;
   sf->branch = NULL;
-  sf->branch = (t_branch*)ft_memalloc(sizeof(t_branch) * sf->brs);
+  sf->branch = (t_branch*)malloc(sizeof(t_branch) * sf->brs);
   while (b < sf->brs)
   {
     sf->branch[b].d = 100;

@@ -33,9 +33,10 @@ t_env *make_env(char **argv, t_frac *fractal)
   if (!(ret = (t_env *)malloc(sizeof(t_env))))
     return (NULL);
 
-  printf("hihihihihi\n\n");
+  printf("hihihihihimake\n\n");
   if (fractal->a == 1)
     ret->tree = make_tree(argv);
+  // printf("tree: %d, %f\n", ret->tree->max, ret->tree->branch[1].rad);
   if (fractal->b == 1)
     ret->juli = make_julia();
   if (fractal->c == 1)
@@ -44,6 +45,7 @@ t_env *make_env(char **argv, t_frac *fractal)
     ret->sf = make_snowflake_questionmark();
   if (fractal->e == 1)
     ret->tree = make_tree(argv);
+  // printf("made hella: %d\t%f\n", ret->juli->maxi, ret->juli->rec);
   return (ret);
 }
 

@@ -107,9 +107,9 @@ int  trees_hook(t_env *env)
   t = 0;
   i = 0;
   env->tree->image = make_img(env->mlx);
-  mlx_mouse_hook(env->tree->win, tree_mouse, env);
-  mlx_hook(env->tree->win, 2, 0, tree_keys, env);
-  mlx_expose_hook(env->tree->win, reset_tree, env);
+  mlx_mouse_hook(env->win, tree_mouse, env);
+  mlx_hook(env->win, 2, 0, tree_keys, env);
+  mlx_expose_hook(env->win, reset_tree, env);
   while (t < 8)
   {
     tree_trunks(env, t);
@@ -121,6 +121,6 @@ int  trees_hook(t_env *env)
     }
     t++;
   }
-  mlx_put_image_to_window(env->mlx, env->tree->win, env->tree->image.img, 0, 0);
+  mlx_put_image_to_window(env->mlx, env->win, env->tree->image.img, 0, 0);
   return (1);
 }

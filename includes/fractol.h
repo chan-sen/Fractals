@@ -73,7 +73,6 @@ typedef struct	s_sf
   int           len;
   int           brs;
 	int						max;
-	void					*win;
 	t_img					image;
 }								t_sf;
 
@@ -86,7 +85,6 @@ typedef struct	s_tree
   int           len;
   int           brs;
 	int						max;
-	void					*win;
 	t_img					image;
 }								t_tree;
 
@@ -102,7 +100,6 @@ typedef struct	s_mandel
 	double				mx;
 	double				my;
 	int						maxi;
-	void					*win;
 	t_img					image;
 }								t_mandel;
 
@@ -118,7 +115,6 @@ typedef	struct	s_julia
 	double				mx;
 	double				my;
 	int						maxi;
-	void					*win;
 	t_img					image;
 }								t_julia;
 
@@ -136,6 +132,7 @@ typedef struct	s_frac
 typedef struct  s_env
 {
 	void 					*mlx;
+	void 					*win;
 	t_tree				*tree;
 	t_julia				*juli;
 	t_mandel			*man;
@@ -174,7 +171,7 @@ t_point  center_tree(t_env *env, int i);
 void branch(t_env *env, t_point a, int br);
 void draw_branch(t_env *env, t_line line);
 t_line line(t_point a, t_point b);
-t_point pointb(t_env *env, t_point a, int j);
+t_point pointb(t_env *env, t_point a, int j, int br);
 int	reset_tree(t_env *env);
 
 int snowflake_questionmark(t_env *env);
@@ -185,6 +182,10 @@ void freezer(t_env *env, t_line line);
 
 int  trees_hook(t_env *env);
 int    trees_d(int t);
+t_point center_trees(t_env *env, int t, int i);
+t_point trees_pointb(t_env *env, t_point a, int j);
+void trees_branch(t_env *env, t_point a, int t, int br);
+void tree_trunks(t_env *env, int t);
 
 
 void put_image_pixel(t_img image, int x, int y, int color);
